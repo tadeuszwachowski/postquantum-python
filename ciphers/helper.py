@@ -7,50 +7,79 @@ liboqs_path = os.path.join(current_dir, '..', 'liboqs', 'build', 'lib', 'liboqs.
 liboqs = ctypes.CDLL(liboqs_path)
 
 # General
-liboqs.OQS_KEM_new.argtypes = [ctypes.c_char_p]
+liboqs.OQS_KEM_new.argtypes = [
+    ctypes.c_char_p  # Algorithm name
+]
 liboqs.OQS_KEM_new.restype = ctypes.c_void_p
 
-liboqs.OQS_KEM_free.argtypes = [ctypes.c_void_p]
+liboqs.OQS_KEM_free.argtypes = [
+    ctypes.c_void_p  # KEM object to be freed
+]
 
-liboqs.OQS_KEM_keypair.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p]
-liboqs.OQS_KEM_keypair.restype = ctypes.c_int
+liboqs.OQS_KEM_keypair.argtypes = [
+    ctypes.c_void_p,  # KEM object
+    ctypes.c_char_p,  # Public key buffer
+    ctypes.c_char_p   # Private key buffer
+]
+liboqs.OQS_KEM_keypair.restype = ctypes.c_int  # Return value
 
-liboqs.OQS_KEM_encaps.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p]
-liboqs.OQS_KEM_encaps.restype = ctypes.c_int
+liboqs.OQS_KEM_encaps.argtypes = [
+    ctypes.c_void_p,  # KEM object
+    ctypes.c_char_p,  # Ciphertext buffer
+    ctypes.c_char_p,  # Shared secret buffer
+    ctypes.c_char_p   # Public key (encapsulation)
+]
+liboqs.OQS_KEM_encaps.restype = ctypes.c_int  # Return value
 
-liboqs.OQS_KEM_decaps.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p]
-liboqs.OQS_KEM_decaps.restype = ctypes.c_int
+liboqs.OQS_KEM_decaps.argtypes = [
+    ctypes.c_void_p,  # KEM object
+    ctypes.c_char_p,  # Shared secret buffer
+    ctypes.c_char_p,  # Ciphertext buffer
+    ctypes.c_char_p   # Public key (decapsulation)
+]
+liboqs.OQS_KEM_decaps.restype = ctypes.c_int  # Return value
 
 # CRYSTALS-Dilithium
-liboqs.OQS_SIG_new.argtypes = [ctypes.c_char_p]
-liboqs.OQS_SIG_new.restype = ctypes.c_void_p
+liboqs.OQS_SIG_new.argtypes = [
+    ctypes.c_char_p  # Algorithm name
+]
+liboqs.OQS_SIG_new.restype = ctypes.c_void_p  # Pointer to the SIG object
 
-liboqs.OQS_SIG_free.argtypes = [ctypes.c_void_p]
+liboqs.OQS_SIG_free.argtypes = [
+    ctypes.c_void_p  # SIG object to be freed
+]
 
-liboqs.OQS_SIG_keypair.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p]
-liboqs.OQS_SIG_keypair.restype = ctypes.c_int
+liboqs.OQS_SIG_keypair.argtypes = [
+    ctypes.c_void_p,  # SIG object
+    ctypes.c_char_p,  # Public key buffer
+    ctypes.c_char_p   # Private key buffer
+]
+liboqs.OQS_SIG_keypair.restype = ctypes.c_int  # Return value
 
-liboqs.OQS_SIG_alg_identifier.argtypes = [ctypes.c_size_t]
-liboqs.OQS_SIG_alg_identifier.restype = ctypes.c_char_p
+liboqs.OQS_SIG_alg_identifier.argtypes = [
+    ctypes.c_size_t  # Algorithm index
+]
+liboqs.OQS_SIG_alg_identifier.restype = ctypes.c_char_p  # Returns a null-terminated string with the algorithm identifier
 
-liboqs.OQS_SIG_alg_count.restype = ctypes.c_size_t
+liboqs.OQS_SIG_alg_count.restype = ctypes.c_size_t  # Returns the count of supported algorithms
 
 liboqs.OQS_SIG_sign.argtypes = [
-    ctypes.c_void_p,  # sig object
-    ctypes.c_char_p,  # signature
-    ctypes.POINTER(ctypes.c_size_t),  # signature_len
-    ctypes.c_char_p,  # message
-    ctypes.c_size_t,  # message_len
-    ctypes.c_char_p,  # secret_key
+    ctypes.c_void_p,             # SIG object
+    ctypes.c_char_p,             # Buffer to store the signature
+    ctypes.POINTER(ctypes.c_size_t),  # Pointer to store the signature length
+    ctypes.c_char_p,             # Message to be signed
+    ctypes.c_size_t,             # Length of the message
+    ctypes.c_char_p              # Private key used for signing
 ]
-liboqs.OQS_SIG_sign.restype = ctypes.c_int
+liboqs.OQS_SIG_sign.restype = ctypes.c_int  # Returns 0 on success, non-zero on failure
 
 liboqs.OQS_SIG_verify.argtypes = [
-    ctypes.c_void_p,  # sig object
-    ctypes.c_char_p,  # message
-    ctypes.c_size_t,  # message_len
-    ctypes.c_char_p,  # signature
-    ctypes.c_size_t,  # signature_len
-    ctypes.c_char_p,  # public_key
+    ctypes.c_void_p,             # SIG object
+    ctypes.c_char_p,             # Message to verify
+    ctypes.c_size_t,             # Length of the message
+    ctypes.c_char_p,             # Signature to verify
+    ctypes.c_size_t,             # Length of the signature
+    ctypes.c_char_p              # Public key used for verification
 ]
-liboqs.OQS_SIG_verify.restype = ctypes.c_int
+liboqs.OQS_SIG_verify.restype = ctypes.c_int  # Returns 0 on success, non-zero on failure
+

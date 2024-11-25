@@ -45,17 +45,12 @@ class Falcon:
         return signature.raw[:signature_len.value]
 
     def verify(self, message, signature, public_key):
-        # Debug prints
-        print(f"Verifying message: {message.hex()}")
-        print(f"Signature: {signature.hex()}")
-        print(f"Public key: {public_key.hex()}")
-
         result = liboqs.OQS_SIG_verify(
             self.sig,
-            signature,
-            len(signature),
             message,
             len(message),
+            signature,
+            len(signature),
             public_key,
         )
         if result != 0:
@@ -67,12 +62,11 @@ class Falcon:
             liboqs.OQS_SIG_free(self.sig)
 
 
-# Define Falcon512
+# Define specific Falcon variants
 class Falcon512(Falcon):
     def __init__(self):
         super().__init__("Falcon-512", 897, 1281, 666)
 
-# Define Falcon1024
 class Falcon1024(Falcon):
     def __init__(self):
         super().__init__("Falcon-1024", 1793, 2305, 1280)
